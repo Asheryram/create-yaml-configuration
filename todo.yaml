@@ -1,38 +1,71 @@
 version: "3.9"
 
+# ------------------------------
+# Common environment variables
+# ------------------------------
+x-db-env: &db-env
+  POSTGRES_DB: todo_db
+  POSTGRES_USER: todo_user
+  POSTGRES_PASSWORD: ${TODO_DB_PASSWORD}
+
+x-backend-env: &backend-env
+  NODE_ENV: production
+  DB_HOST: db
+  DB_PORT: 5432
+  DB_NAME: todo_db
+  DB_USER: todo_user
+  DB_PASSWORD: ${TODO_DB_PASSWORD}
+
 services:
+  # ------------------------------
+  # Frontend Service
+  # ------------------------------
   frontend:
     image: airknightash/todo-frontend:1.0.0
     container_name: todo-frontend
     ports:
       - "3000:3000"
     environment:
-      API_BASE_URL: http://backend:4000
+      TODO_SERVICE_URL: http://todo-backend:4000
+      USER_SERVICE_URL: http://user-backend:5000
     depends_on:
-      - backend
+      - todo-backend
+      - user-backend
 
-  backend:
+  # ------------------------------
+  # Backend: Todo Service
+  # ------------------------------
+  todo-backend:
     image: airknightash/todo-backend:1.0.0
     container_name: todo-backend
     ports:
       - "4000:4000"
     environment:
-      NODE_ENV: production
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_NAME: todo_db
-      DB_USER: todo_user
-      DB_PASSWORD: ${TODO_DB_PASSWORD}
+      <<: *backend-env
     depends_on:
       - db
 
+  # ------------------------------
+  # Backend: User Service
+  # ------------------------------
+  user-backend:
+    image: airknightash/user-backend:1.0.0
+    container_name: user-backend
+    ports:
+      - "5000:5000"
+    environment:
+      <<: *backend-env
+    depends_on:
+      - db
+
+  # ------------------------------
+  # Database Service
+  # ------------------------------
   db:
     image: postgres:15
     container_name: todo-db
     environment:
-      POSTGRES_DB: todo_db
-      POSTGRES_USER: todo_user
-      POSTGRES_PASSWORD: ${TODO_DB_PASSWORD}
+      <<: *db-env
     volumes:
       - db-data:/var/lib/postgresql/data
 
