@@ -89,7 +89,7 @@ The YAML file was validated to ensure correctness and absence of syntax errors.
 
 * The file passed validation successfully with no errors.
 
-A screenshot of the validation result is stored as `validateyaml.png`.
+![YAML Validation Result](screenshots/validateyaml.png)
 
 ---
 
@@ -124,7 +124,7 @@ After validation, the YAML configuration was converted into JSON format.
 
 * [https://jsonformatter.org/yaml-to-json](https://jsonformatter.org/yaml-to-json)
 
-A screenshot of the conversion result is stored as `yml_to_json.png`.
+![YAML to JSON Conversion Result](screenshots/yml_to_json.png)
 
 ---
 
